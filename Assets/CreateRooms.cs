@@ -3,6 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 
+// Plans:
+
+// Read the adventures in level design paper again.
+// Add additional "wings" - branching paths that behave like the begin-> end path. Have multiple of them in a level for a less
+// linear experience.
+// Lock/Key puzzles
+// Different tiles to fill the space with variation
+
+/* Ideas for the graph grammar to dictate how the level will be created:
+ * 
+ * A dungeon is an entrance, a node, and a final room.
+ * 
+ * A node is a space connecting to a keynode and a doornode
+ * A node is a space
+ * A keynode is a node connected to a room with a key
+ * A doornode is a node with doors unlocked by that key
+ * A space, a terminal, is the stuff I've generated so far - a sort of linearish room layout.
+ * It can be parametric.
+ * Its parameters can be both size and the keys the player has potentially unlocked that we're allowed to put in this space.
+ * 
+ * */
+
+
+
 // This process is based on this presentation by a Path of Exile developer about 
 // their level generation process: https://www.youtube.com/watch?v=GcM9Ynfzll0
 
@@ -103,7 +127,7 @@ public class CreateRooms : MonoBehaviour {
                 path.Add(r);
             }
             path.Add(begin);
-            
+
             // @TODO: add five rooms that are adjacent to existing rooms, rather than just five random rooms.
             // Also make sure that this is possible (there are that many not-in-path rooms) 
             // and check that those rooms added aren't already in path. 
@@ -112,7 +136,34 @@ public class CreateRooms : MonoBehaviour {
             //    path.Add(rooms[Random.Range(0, rooms.GetLength(0)), Random.Range(0, rooms.GetLength(1))]);
             //}
             //Debug.Log(begin.Id);
-            DrawRooms(rooms, 0, 0, TileWidth, Floor, Door, Wall, path);
+
+
+            //@TODO: Replace these random selections from sets with
+            // using an iterator moved forward a random distance. This 
+            // would be better and not waste as much computing time copying memory.
+
+            Room[] roomsInDisplayedSet = new Room[path.Count];
+            path.CopyTo(roomsInDisplayedSet);
+            for (int i = 0; i < ExtraRooms; i++)
+            {
+
+                Room addedSelection;
+                do
+                {
+                    Room random = roomsInDisplayedSet[Random.Range(0, roomsInDisplayedSet.Length)];
+                    Assert.IsNotNull(random);
+                    Room[] connectedRooms = new Room[random.Adj.Count];
+                    random.Adj.CopyTo(connectedRooms);
+                    Assert.IsTrue(connectedRooms.Length != 0);
+                    //Change this to get a room not in the set if there is one. Is there a function
+                    // that computes the intersection of two sets?
+                    // If so, can use it here to get a room not in path but that is in random.Adj
+                    addedSelection = connectedRooms[Random.Range(0, connectedRooms.Length)];
+                    Assert.IsNotNull(addedSelection);
+                } while (path.Contains(addedSelection)) ;
+                path.Add(addedSelection);
+            }
+
 
             //this is a bit silly - i'm not actually sure how to get just one thing from a hashset.
             // need to learn a bit more about c# iterators...
@@ -121,6 +172,9 @@ public class CreateRooms : MonoBehaviour {
                 player.transform.Translate(new Vector3(spot.x * TileWidth, 0, spot.y * TileWidth));
                 break;
             }
+
+            DrawRooms(rooms, 0, 0, TileWidth, Floor, Door, Wall, path);
+
 
         }
     }
@@ -157,20 +211,13 @@ public class CreateRooms : MonoBehaviour {
         IComparer<Room> comp = new ByDistance();
         unvisited.Sort(comp);
 
-        //Debug.Log("Printing unvisited");
-        //foreach (Room r in unvisited)
-        //{
-        //    Debug.Log("Room " + r.Id + " at distance " + r.Distance);
-        //}
         while (!(unvisited.Count == 0))
         {
             
-            //Debug.Log("Visiting room " + curr.Id);
             foreach(Room visit in curr.Adj)
             {
                 if(!visit.Visited && (visit.Distance == Room.INF || visit.Distance > curr.Distance + curr.Weight))
                 {
-                    //Debug.Log("Relaxing distance from curr to " + visit.Id);
                     
                     visit.Distance = curr.Distance + curr.Weight;
                     visit.Parent = curr;
@@ -204,18 +251,11 @@ public class CreateRooms : MonoBehaviour {
                     {
                         unvisited.Add(visit);
                     }
-                    //Debug.Log("Printing unvisited");
-                    //foreach (Room r in unvisited)
-                    //{
-                    //    Debug.Log("Room " + r.Id + " at distance " + r.Distance);
-                    //}
+
 
                 }
             }
-            //foreach (Room r in unvisited)
-            //{
-            //    Debug.Log("Room " + r.Id + " at distance " + r.Distance);
-            //}
+
             curr.Visited = true;
             unvisited.Remove(curr);
             if(unvisited.Count > 0)
@@ -225,7 +265,6 @@ public class CreateRooms : MonoBehaviour {
             
         }
 
-        //Debug.Log("dijkstra finished");
 
     }
 
@@ -292,13 +331,11 @@ public class CreateRooms : MonoBehaviour {
                 }
             }
         }
-        Debug.Log("Creating walls!");
         //create walls
         foreach (Room r in inclusions)
         {
             CreateWalls(r, wall, 0, 0, 10, inclusions);
         }
-        Debug.Log("Done creating walls!");
     }
     
     private void MergeRoom(Room[,] rooms)

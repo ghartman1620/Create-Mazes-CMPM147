@@ -428,7 +428,7 @@ MonoBehaviour:
   Wall: {fileID: 1336044065418500, guid: 6224e24de2b06b1488cb9fd07eda0014, type: 2}
   player: {fileID: 386004053}
   TileWidth: 10
-  Size: 20
-  Connections: 150
+  Size: 15
+  Connections: 90
   MaxWeight: 150
-  ExtraRooms: 5
+  ExtraRooms: 10
