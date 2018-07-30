@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 
+// This is more or less deprecated in this form.
+// A bunch of this code got copy-pasted over to SpaceRoom.cs
+// The main script that adds everything to a level is now MissionSpace.
+
+
+
+
 // Plans:
 
 // Read the adventures in level design paper again.

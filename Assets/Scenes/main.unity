@@ -264,7 +264,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &386004054
 MonoBehaviour:
@@ -383,52 +383,50 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 386004049}
---- !u!1 &1357286354
+--- !u!1 &2021041405
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1357286355}
-  - component: {fileID: 1357286356}
+  - component: {fileID: 2021041406}
+  - component: {fileID: 2021041407}
   m_Layer: 0
-  m_Name: Builder
+  m_Name: MissionSpace
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1357286355
+--- !u!4 &2021041406
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1357286354}
+  m_GameObject: {fileID: 2021041405}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.7825592, y: -0.2327363, z: -3.4345937}
+  m_LocalPosition: {x: 0.34734726, y: 4.273694, z: -3.2420762}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1357286356
+--- !u!114 &2021041407
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1357286354}
+  m_GameObject: {fileID: 2021041405}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 956060f2bd8863a4491d760c7d1e1427, type: 3}
+  m_Script: {fileID: 11500000, guid: a3effefa3d792ab4a8557a09ed5f4c3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Floor: {fileID: 1515489296063796, guid: b55227ee4d546174d96627d0a2c6054c, type: 2}
-  Door: {fileID: 1067703213041526, guid: c28eab4dfd5d888408a20c27d5eb2e97, type: 2}
-  Wall: {fileID: 1336044065418500, guid: 6224e24de2b06b1488cb9fd07eda0014, type: 2}
-  player: {fileID: 386004053}
-  TileWidth: 10
-  Size: 15
-  Connections: 90
-  MaxWeight: 150
-  ExtraRooms: 10
+  SpaceBudget: 20
+  ObstacleBudget: 1
+  Door: {fileID: 114148597097724776, guid: 2d111ccc383816e418a479b062a1c299, type: 2}
+  Exit: {fileID: 114037803902294300, guid: 6a839340affb4b14db5187c6501be8cd, type: 2}
+  Entrance: {fileID: 114673934798413668, guid: 2ca534621351b874b818362521c4b8da, type: 2}
+  Space: {fileID: 114871640993883484, guid: 9a94b4c3a7434b743bd031afc40c5f79, type: 2}
+  Key: {fileID: 114174100038925292, guid: 77c46ec94f1039a4ebd1865e66288cd9, type: 2}
