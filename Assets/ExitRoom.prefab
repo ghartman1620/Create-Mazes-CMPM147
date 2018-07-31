@@ -51,3 +51,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e4740735ec4e744a9179de9d64a048f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Floor: {fileID: 1515489296063796, guid: b55227ee4d546174d96627d0a2c6054c, type: 2}
+  WinObject: {fileID: 1350861678860660, guid: e7a83ca77d8b75b47b36a874123041f9, type: 2}
+  TileSize: 10

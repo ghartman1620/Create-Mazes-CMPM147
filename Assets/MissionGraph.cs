@@ -3,6 +3,24 @@ using System.Diagnostics;
 using System.Collections;
 using System.Collections.Generic;
 
+
+
+public enum Direction { Up, Down, Left, Right };
+public class Connection
+{
+    public Direction Dir;
+    public UnityEngine.Vector2 Point;
+    public Connection(Direction d, UnityEngine.Vector2 v)
+    {
+        Dir = d;
+        Point = v;
+    }
+    public override int GetHashCode()
+    {
+        return Dir.GetHashCode() + Point.GetHashCode();
+    }
+}
+
 // A vertex for a missiongraph. 
 // Contains directed edges - but all edges point both forward and backward, so each
 // Vertex is connected by two edges - a forward and a back edge.
@@ -30,10 +48,13 @@ public class Vertex
     // any additional info to give the space maker
     // such as what key corresponds to a door, and what obstacles may be in a room
     public HashSet<String> Tags; 
-    
     public HashSet<Vertex> ForwardAdj;
     public HashSet<Vertex> BackAdj;
     public int Size;
+    public UnityEngine.Vector2 BasePosition;
+    public bool Visited;
+    public HashSet<Connection> Connections;
+
     public Vertex(bool terminal, string name, int size = 0)
     {
         Name = name;
@@ -42,6 +63,8 @@ public class Vertex
         Tags = new HashSet<string>();
         ForwardAdj = new HashSet<Vertex>();
         BackAdj = new HashSet<Vertex>();
+        Connections = new HashSet<Connection>();
+        Visited = false;
     }
 }
 
@@ -198,8 +221,11 @@ public class MissionGraph: IEnumerable<Vertex>
             case "dungeon":
                 System.Diagnostics.Trace.WriteLine("dungeon replacement");
                 Vertex entrance = new Vertex(true, "entrance");
+                entrance.Size = 1;
                 Vertex node = new Vertex(false, "node");
+                node.Size = -1;
                 Vertex exit = new Vertex(true, "exit");
+                exit.Size = 1;
                 entrance.ForwardAdj.Add(node);
                 node.BackAdj.Add(entrance);
                 node.ForwardAdj.Add(exit);
@@ -235,7 +261,7 @@ public class MissionGraph: IEnumerable<Vertex>
                 {
                     option = 1;
                 }
-                else if(nonterminals.Count == 2)
+                else if(obstacleBudget == 2)
                 {
                     option = 1 + rand.Next() % 2;
                 }
@@ -243,10 +269,13 @@ public class MissionGraph: IEnumerable<Vertex>
                 else {
                     option = rand.Next() % 3;
                 }
-                if(option == SpaceOption)
+                UnityEngine.Debug.Log("Doing a node replacement. Option is " + option);  
+
+                if (option == SpaceOption)
                 {
                     System.Diagnostics.Trace.WriteLine("node to space replacement");
                     Vertex space = new Vertex(true, "space");
+                    space.Size = sizeBudget;
                     replacements.Add(space);
                     Replace(nonterminal, replacements, space, space);
                 }
@@ -254,9 +283,13 @@ public class MissionGraph: IEnumerable<Vertex>
                 {
                     System.Diagnostics.Trace.WriteLine("One obstacle replacement");
                     Vertex space = new Vertex(true, "space");
+                    space.Size = sizeBudget;
                     Vertex key = new Vertex(true, "key");
+                    key.Size = 1;
                     Vertex door = new Vertex(true, "door");
+                    door.Size = 1;
                     Vertex node1 = new Vertex(false, "node");
+                    node1.Size = -1;
 
                     space.ForwardAdj.Add(node1);
                     node1.BackAdj.Add(space);
@@ -277,17 +310,24 @@ public class MissionGraph: IEnumerable<Vertex>
                 }
                 else if(option == TwoObstacleOption)
                 {
+                    
                     System.Diagnostics.Trace.WriteLine("two obstacle replacement");
                     Vertex space = new Vertex(true, "space");
+                    space.Size = sizeBudget;
                     Vertex key = new Vertex(true, "key");
+                    key.Size = 1;
                     Vertex key1 = new Vertex(true, "key");
+                    key1.Size = 1;
                     Vertex door = new Vertex(true, "door");
+                    door.Size = 1;
                     Vertex door1 = new Vertex(true, "door");
+                    door1.Size = 1;
 
                     
                     Vertex node1 = new Vertex(false, "node");
+                    node1.Size = -1;
                     Vertex node2 = new Vertex(false, "node");
-
+                    node2.Size = -1;
 
                     space.ForwardAdj.Add(node1);
                     node1.BackAdj.Add(space);
@@ -296,7 +336,7 @@ public class MissionGraph: IEnumerable<Vertex>
                     node2.BackAdj.Add(space);
 
                     space.ForwardAdj.Add(door);
-                    node1.BackAdj.Add(space);
+                    door.BackAdj.Add(space);
 
                     door.ForwardAdj.Add(door1);
                     door1.BackAdj.Add(door);

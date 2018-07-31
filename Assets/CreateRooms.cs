@@ -111,8 +111,8 @@ public class CreateRooms : MonoBehaviour {
                 end = rooms[rooms.GetLength(0) - 1, Random.Range(0, rooms.GetLength(1))];
             } while (begin.Equals(end));
 
-            //Debug.Log("Begin is " + begin.Id);
-            //Debug.Log("End is " + end.Id);
+            ////Debug.Log("Begin is " + begin.Id);
+            ////Debug.Log("End is " + end.Id);
 
             foreach(Room r in uniqueRoomsArray)
             {
@@ -125,11 +125,11 @@ public class CreateRooms : MonoBehaviour {
             //DrawRooms(rooms, 0, 0, 10, Floor, Door);
 
 
-            //Debug.Log("End to begin path is: ");
+            ////Debug.Log("End to begin path is: ");
             HashSet<Room> path = new HashSet<Room>();
             for(Room r = end; r != begin; r = r.Parent)
             {
-                //Debug.Log(r.Id);
+                ////Debug.Log(r.Id);
                 Assert.IsNotNull(r.Parent);
                 path.Add(r);
             }

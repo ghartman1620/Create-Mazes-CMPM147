@@ -398,55 +398,61 @@ namespace MyTests
             Assert.IsTrue(g5.NonterminalCount == 0);
 
         }
-        [TestMethod]
-        public void TestMissionGraphMeetsSizeBudget()
-        {
-            MissionGraph g1 = new MissionGraph(0, 10, 1000);
-            g1.CompleteProduction();
-            int g1SizeSum = 0;
-            foreach(Vertex v in g1)
-            {
-                g1SizeSum += v.Size;
-            }
-            Assert.AreEqual(10, g1SizeSum);
-
-            MissionGraph g2 = new MissionGraph(1, 15, 1000);
-            g2.CompleteProduction();
-            int g2SizeSum = 0;
-            foreach (Vertex v in g2)
-            {
-                g2SizeSum += v.Size;
-            }
-            Assert.AreEqual(15, g2SizeSum);
-
-            MissionGraph g3 = new MissionGraph(2, 20, 1000);
-            g3.CompleteProduction();
-            int g3SizeSum = 0;
-            foreach (Vertex v in g3)
-            {
-                g3SizeSum += v.Size;
-            }
-            Assert.AreEqual(20, g3SizeSum);
+        //Deprecated. Doing something different with size now - instead of size budget
+        // now missiongraphs will just make each space the same size, and every other
+        // type of thing one large.
+        // Left here for posterity.
 
 
-            MissionGraph g4 = new MissionGraph(1, 50, 1000);
-            g4.CompleteProduction();
-            int g4SizeSum = 0;
-            foreach (Vertex v in g4)
-            {
-                g4SizeSum += v.Size;
-            }
-            Assert.AreEqual(50, g4SizeSum);
+        //[TestMethod]
+        //public void TestMissionGraphMeetsSizeBudget()
+        //{
+        //    MissionGraph g1 = new MissionGraph(0, 10, 1000);
+        //    g1.CompleteProduction();
+        //    int g1SizeSum = 0;
+        //    foreach(Vertex v in g1)
+        //    {
+        //        g1SizeSum += v.Size;
+        //    }
+        //    Assert.AreEqual(10, g1SizeSum);
 
-            MissionGraph g5 = new MissionGraph(10, 100, 1000);
-            g5.CompleteProduction();
-            int g5SizeSum = 0;
-            foreach (Vertex v in g5)
-            {
-                g5SizeSum += v.Size;
-            }
-            Assert.AreEqual(100, g5SizeSum);
+        //    MissionGraph g2 = new MissionGraph(1, 15, 1000);
+        //    g2.CompleteProduction();
+        //    int g2SizeSum = 0;
+        //    foreach (Vertex v in g2)
+        //    {
+        //        g2SizeSum += v.Size;
+        //    }
+        //    Assert.AreEqual(15, g2SizeSum);
 
-        }
+        //    MissionGraph g3 = new MissionGraph(2, 20, 1000);
+        //    g3.CompleteProduction();
+        //    int g3SizeSum = 0;
+        //    foreach (Vertex v in g3)
+        //    {
+        //        g3SizeSum += v.Size;
+        //    }
+        //    Assert.AreEqual(20, g3SizeSum);
+
+
+        //    MissionGraph g4 = new MissionGraph(1, 50, 1000);
+        //    g4.CompleteProduction();
+        //    int g4SizeSum = 0;
+        //    foreach (Vertex v in g4)
+        //    {
+        //        g4SizeSum += v.Size;
+        //    }
+        //    Assert.AreEqual(50, g4SizeSum);
+
+        //    MissionGraph g5 = new MissionGraph(10, 100, 1000);
+        //    g5.CompleteProduction();
+        //    int g5SizeSum = 0;
+        //    foreach (Vertex v in g5)
+        //    {
+        //        g5SizeSum += v.Size;
+        //    }
+        //    Assert.AreEqual(100, g5SizeSum);
+
+        //}
     }
 }
