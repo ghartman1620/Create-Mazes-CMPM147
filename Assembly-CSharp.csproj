@@ -59,11 +59,11 @@
      <Compile Include="Assets\DoorRoom.cs" />
      <Compile Include="Assets\EntranceRoom.cs" />
      <Compile Include="Assets\ExitRoom.cs" />
+     <Compile Include="Assets\KeyLock.cs" />
      <Compile Include="Assets\KeyRoom.cs" />
      <Compile Include="Assets\MissionGraph.cs" />
      <Compile Include="Assets\MissionSpace.cs" />
      <Compile Include="Assets\MissionTerminal.cs" />
-     <Compile Include="Assets\OpenableDoor.cs" />
      <Compile Include="Assets\PlayerController.cs" />
      <Compile Include="Assets\Room.cs" />
      <Compile Include="Assets\SpaceRoom.cs" />

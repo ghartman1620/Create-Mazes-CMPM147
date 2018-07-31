@@ -44,10 +44,7 @@ public class Vertex
 
     // The name of this symbol in the grammar.
     public string Name;
-
-    // any additional info to give the space maker
-    // such as what key corresponds to a door, and what obstacles may be in a room
-    public HashSet<String> Tags; 
+    
     public HashSet<Vertex> ForwardAdj;
     public HashSet<Vertex> BackAdj;
     public int Size;
@@ -55,12 +52,17 @@ public class Vertex
     public bool Visited;
     public HashSet<Connection> Connections;
 
+
+
+    public int LockId;
+    public UnityEngine.Color Color;
+    
+
     public Vertex(bool terminal, string name, int size = 0)
     {
         Name = name;
         Size = size;
         IsTerminal = terminal;
-        Tags = new HashSet<string>();
         ForwardAdj = new HashSet<Vertex>();
         BackAdj = new HashSet<Vertex>();
         Connections = new HashSet<Connection>();
@@ -92,8 +94,8 @@ public class MissionGraph: IEnumerable<Vertex>
     private int sizeBudget;
 
     private Random rand;
+    private int keyDoorCount = 0;
 
-    
     // Creates a MissionGraph with a single vertex named dungeon. 
     // This dungeon node is replaced with some number of terminal rules in 
     // rewrite(). One may also add vertices manually using AddVertex
@@ -261,7 +263,7 @@ public class MissionGraph: IEnumerable<Vertex>
                 {
                     option = 1;
                 }
-                else if(obstacleBudget == 2)
+                else if(nonterminals.Count == 1 && obstacleBudget > 1)
                 {
                     option = 1 + rand.Next() % 2;
                 }
@@ -269,7 +271,6 @@ public class MissionGraph: IEnumerable<Vertex>
                 else {
                     option = rand.Next() % 3;
                 }
-                UnityEngine.Debug.Log("Doing a node replacement. Option is " + option);  
 
                 if (option == SpaceOption)
                 {
@@ -286,10 +287,17 @@ public class MissionGraph: IEnumerable<Vertex>
                     space.Size = sizeBudget;
                     Vertex key = new Vertex(true, "key");
                     key.Size = 1;
+                    int keyNumber = ++keyDoorCount;
+                    key.LockId = keyNumber;
                     Vertex door = new Vertex(true, "door");
+                    door.LockId = keyNumber;
                     door.Size = 1;
                     Vertex node1 = new Vertex(false, "node");
                     node1.Size = -1;
+
+                    UnityEngine.Color c1 = UnityEngine.Random.ColorHSV();
+                    key.Color = c1;
+                    door.Color = c1;
 
                     space.ForwardAdj.Add(node1);
                     node1.BackAdj.Add(space);
@@ -316,14 +324,26 @@ public class MissionGraph: IEnumerable<Vertex>
                     space.Size = sizeBudget;
                     Vertex key = new Vertex(true, "key");
                     key.Size = 1;
+                    int key1Number = ++keyDoorCount;
+                    key.LockId = key1Number;
                     Vertex key1 = new Vertex(true, "key");
+                    int key2Number = ++keyDoorCount;
+                    key1.LockId = key2Number;
                     key1.Size = 1;
                     Vertex door = new Vertex(true, "door");
+                    door.LockId = key1Number;
                     door.Size = 1;
                     Vertex door1 = new Vertex(true, "door");
+                    door1.LockId = key2Number;
                     door1.Size = 1;
 
-                    
+                    UnityEngine.Color c1 = UnityEngine.Random.ColorHSV();
+                    UnityEngine.Color c2 = UnityEngine.Random.ColorHSV();
+                    key.Color = c1;
+                    door.Color = c1;
+                    key1.Color = c2;
+                    door1.Color = c2;
+
                     Vertex node1 = new Vertex(false, "node");
                     node1.Size = -1;
                     Vertex node2 = new Vertex(false, "node");

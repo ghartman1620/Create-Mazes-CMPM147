@@ -18,11 +18,13 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody rb;
     private int keyCount;
+    private HashSet<int> keysPickedUp;
     // Use this for initialization
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         WinText.text = "";
+        keysPickedUp = new HashSet<int>();
     }
 
     // Update is called once per frame
@@ -46,30 +48,29 @@ public class PlayerController : MonoBehaviour
     // This code similar to code from the "roll a ball" unity tutorial.
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("on trigger enter!");
         // ..and if the game object we intersect has the tag 'Pick Up' assigned to it..
         if (other.gameObject.CompareTag("Pick Up"))
         {
-            Debug.Log("That is a pcik up!");
             // Make the other game object (the pick up) inactive, to make it disappear
             other.gameObject.SetActive(false);
 
             // Add one to the score variable 'count'
             keyCount++;
-            KeyText.text = "Keys: " + keyCount;
+            keysPickedUp.Add(other.gameObject.GetComponent<KeyLock>().LockId);
 
             // Run the 'SetCountText()' function (see below)
             //SetCountText();
+            KeyText.text = "Keys: " + keyCount;
         }
         if (other.gameObject.CompareTag("Openable Door"))
         {
-            Debug.Log("I can open this door!");
-            if(keyCount > 0)
+            if (keysPickedUp.Contains(other.gameObject.GetComponent<KeyLock>().LockId))
             {
-                keyCount--;
+                
                 other.gameObject.SetActive(false);
-                KeyText.text = "Keys: " + keyCount;
+                
             }
+            
         }
         if (other.gameObject.CompareTag("Win"))
         {

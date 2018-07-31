@@ -4,16 +4,19 @@ using UnityEngine;
 
 public class KeyRoom : MissionTerminal {
     public GameObject Floor;
-    public GameObject Key;
+    public KeyLock Key;
     public int TileSize;
 
 
     public override void Build(Vertex v)
     {
         Instantiate(Floor, new Vector3(TileSize*v.BasePosition.x, 0, TileSize*v.BasePosition.y), Quaternion.identity);
-        Instantiate(Key, new Vector3(TileSize * v.BasePosition.x+TileSize/4, 1, TileSize * v.BasePosition.y), Quaternion.identity);
-        Instantiate(Key, new Vector3(TileSize * v.BasePosition.x-TileSize/4, 1, TileSize * v.BasePosition.y), Quaternion.identity);
+        GameObject g = Instantiate(Key, new Vector3(TileSize * v.BasePosition.x, 1, TileSize * v.BasePosition.y), Quaternion.identity).gameObject;
 
+        // The fuck?
+        // from https://docs.unity3d.com/ScriptReference/Material.SetColor.html
+        g.GetComponent<Renderer>().material.color = v.Color;
+        g.GetComponent<KeyLock>().LockId = v.LockId;
     }
 
     // Use this for initialization

@@ -11,7 +11,7 @@ public class ExitRoom : MissionTerminal {
     {
         Instantiate(Floor, new Vector3(v.BasePosition.x * TileSize, 0, v.BasePosition.y * TileSize), Quaternion.identity);
         Instantiate(WinObject, new Vector3(v.BasePosition.x * TileSize, 0, v.BasePosition.y * TileSize), Quaternion.identity);
-
+    
     }
     // Use this for initialization
     void Start () {

@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 33613587157817100}
   - component: {fileID: 23038493463001890}
   - component: {fileID: 136959131068451326}
+  - component: {fileID: 114051420122393738}
   m_Layer: 0
   m_Name: Key
   m_TagString: Pick Up
@@ -84,6 +85,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1097829204139712}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &114051420122393738
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1097829204139712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b59329817fd056d4d9e7dc6d73a1da21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LockId: 0
 --- !u!136 &136959131068451326
 CapsuleCollider:
   m_ObjectHideFlags: 1
