@@ -160,9 +160,6 @@ public class MissionSpace : MonoBehaviour {
                             directionValid = true;
                         }
                     }
-                    //If you're reading this, Jo, I worked really hard on this and 
-                    // I'm just as disappointed as you are that this code I'm writing here 
-                    // is lame and unscalable.
                     int intersectX = 0;
                     int intersectY = 0;
                     int connectedTileX = 0;
