@@ -8,6 +8,9 @@ public class SpaceRoom : MissionTerminal {
     public GameObject Floor;
     public GameObject Door;
     public GameObject Wall;
+    public GameObject Ramp;
+    // There should be GridSizeOfEachTile*GridSizeOfEachTile of these in the same space as one Floor.
+    public GameObject FloorTilePiece;
     public float MaxWeight;
     public int TileWidth;
 
@@ -19,19 +22,23 @@ public class SpaceRoom : MissionTerminal {
     private int Connections;
     private readonly double ConnectionsDivisor = 2.5;
     private readonly double ExtraRoomsDivisor = 5;
+    private readonly int GridSizeOfEachTile = 4;
+    private readonly int NumModels = 1;
     // This really ought to be passed around, but I'm running out of time.
     private HashSet<Connection> connections;
 
+   
+    
+
     public override void Build(Vertex v)
     {
-        ////Debug.Log("In spaceroom build, doing superclass call");
         connections = v.Connections;
-        
+
         Size = v.Size;
-        ////Debug.Log("In spaceroom build done with superclass call");
-        ////Debug.Log(Size);
+        //////Debug.Log("In spaceroom build done with superclass call");
+        //////Debug.Log(Size);
         Connections = (int)(Size * Size / ConnectionsDivisor);
-        //Debug.Log(Connections);
+        ////Debug.Log(Connections);
        
         Assert.IsTrue((Size * Size) - 1 > Connections);
         Assert.IsTrue(Connections >= 0);
@@ -83,8 +90,8 @@ public class SpaceRoom : MissionTerminal {
             hs.CopyTo(uniqueRoomsArray);
             Room middle = rooms[Size/2, Size/2];  
 
-            ////Debug.Log("Begin is " + begin.Id);
-            ////Debug.Log("End is " + end.Id);
+            //////Debug.Log("Begin is " + begin.Id);
+            //////Debug.Log("End is " + end.Id);
 
             foreach (Room r in uniqueRoomsArray)
             {
@@ -97,16 +104,16 @@ public class SpaceRoom : MissionTerminal {
             //DrawRooms(rooms, 0, 0, 10, Floor, Door);
 
 
-            ////Debug.Log("End to begin path is: ");
+            //////Debug.Log("End to begin path is: ");
             HashSet<Room> path = new HashSet<Room>();
             foreach(Connection c in v.Connections)
             {
-                //Debug.Log("Attempting to get room: " + c.Point.x + " , " + c.Point.y);
-                //Debug.Log("basePosition is " + v.BasePosition.x + " , " + v.BasePosition.y);
+                ////Debug.Log("Attempting to get room: " + c.Point.x + " , " + c.Point.y);
+                ////Debug.Log("basePosition is " + v.BasePosition.x + " , " + v.BasePosition.y);
 
                 for (Room r = rooms[(int)(c.Point.x-v.BasePosition.x), (int)(c.Point.y-v.BasePosition.y)]; r != middle; r = r.Parent)
                 {
-                    ////Debug.Log(r.Id);
+                    //////Debug.Log(r.Id);
                     Assert.IsNotNull(r.Parent);
                     path.Add(r);
                 }
@@ -121,7 +128,7 @@ public class SpaceRoom : MissionTerminal {
             //{
             //    path.Add(rooms[Random.Range(0, rooms.GetLength(0)), Random.Range(0, rooms.GetLength(1))]);
             //}
-            ////Debug.Log(begin.Id);
+            //////Debug.Log(begin.Id);
 
 
             //@TODO: Replace these random selections from sets with
@@ -159,7 +166,7 @@ public class SpaceRoom : MissionTerminal {
     }
     // Use this for initialization
     void Start () {
-        //Debug.Log("space start");
+        ////Debug.Log("space start");
     }
 	
 	// Update is called once per frame
@@ -254,23 +261,18 @@ public class SpaceRoom : MissionTerminal {
         {
             Destroy(f);
         }
-        for (int i = 0; i < Size; i++)
+        foreach(Room r in inclusions)
         {
-            for (int j = 0; j < Size; j++)
+            CreateFloors(r, floor, baseX, baseZ, size, inclusions);
+            foreach (Room r1 in r.Adj)
             {
-                if (inclusions.Contains(rooms[i, j]))
+                if (r != null && inclusions.Contains(r))
                 {
-                    CreateFloors(rooms[i, j], floor, baseX, baseZ, size);
-                    foreach (Room r in rooms[i, j].Adj)
-                    {
-                        if (rooms[i, j] != null && inclusions.Contains(r))
-                        {
-                            CreateDoor(rooms[i, j], r, door, baseX, baseZ, size);
-                        }
-                    }
+                    CreateDoor(r, r1, door, baseX, baseZ, size);
                 }
             }
         }
+             
         //create walls
         foreach (Room r in inclusions)
         {
@@ -338,8 +340,8 @@ public class SpaceRoom : MissionTerminal {
                 {
                     s += room.Id + ", ";
                 }
-                //Debug.Log(i + ", " + j + ", id " + r[i, j].Id + " is adjacent to " + s);
-                //Debug.Log(i + ", " + j + ", id " + r[i, j].Id + " has parent " + (r[i, j].Parent == null ? "null" : r[i, j].Parent.Id.ToString()) + " and distance " + r[i, j].Distance);
+                ////Debug.Log(i + ", " + j + ", id " + r[i, j].Id + " is adjacent to " + s);
+                ////Debug.Log(i + ", " + j + ", id " + r[i, j].Id + " has parent " + (r[i, j].Parent == null ? "null" : r[i, j].Parent.Id.ToString()) + " and distance " + r[i, j].Distance);
             }
         }
     }
@@ -366,7 +368,7 @@ public class SpaceRoom : MissionTerminal {
                 (c.Dir == Direction.Left && xoff == -1) ||
                 (c.Dir == Direction.Right && xoff == 1)))
             {
-                //Debug.Log("Not putting wall! at position" + c.Point.x + " , " + c.Point.y + " in direction " + c.Dir);
+                ////Debug.Log("Not putting wall! at position" + c.Point.x + " , " + c.Point.y + " in direction " + c.Dir);
                 return;
             }
         }
@@ -418,21 +420,219 @@ public class SpaceRoom : MissionTerminal {
         }
     }
 
+    
+
     // Creates every floor tile for a given room.
     // Room r - the room to have its floor tiles created
     // GameObject floor - the floor tile prefab to be created. See CreateDoor for notes about this.
     // float baseX, baseZ - the beginning of a maze. Position at which the 0, 0 room's floor tile will go.
     // float size - the size of a floor tile. Used for positioning with relative indices in room objects.
-    private void CreateFloors(Room r, GameObject floor, float baseX, float baseZ, float size)
+    private void CreateFloors(Room r, GameObject floor, float baseX, float baseZ, float size, HashSet<Room> inclusions)
     {
+        IEnumerator<Vector2> enumer = r.Space.GetEnumerator();
+        enumer.MoveNext();
+        Vector2 first = enumer.Current;
+
+        float minX = first.x;
+        float minY = first.y;
+
         foreach (Vector2 point in r.Space)
         {
-            float x = point.x * size + baseX * size;
-            float y = 0;
-            float z = point.y * size + baseZ * size;
-            Instantiate(floor, new Vector3(x, y, z), Quaternion.identity);
-            floors.Add(Instantiate(floor, new Vector3(x, y, z), Quaternion.identity));
+            if (point.x < minX)
+            {
+                minX = point.x;
+            }
+            if (point.y < minY)
+            {
+                minY = point.y;
+            }
         }
+
+
+        List<Vector2> aspTiles = new List<Vector2>();
+        List<Vector2> aspStartPoints = new List<Vector2>();
+
+        foreach (Vector2 point in r.Space)
+        {
+            aspTiles.Add(new Vector2(point.x - minX, point.y - minY));
+        }
+        foreach (Room adj in r.Adj)
+        {
+            if (inclusions.Contains(adj))
+            {
+                aspStartPoints.AddRange(ConnectingPoints(r, adj, minX, minY));
+            }
+        }
+        foreach (Vector2 pt in r.Space)
+        {
+            foreach (Connection c in connections)
+            {
+                if (c.Point.x - baseX == pt.x && c.Point.y - baseZ == pt.y)
+                {
+                    float x = 0;
+                    float y = 0;
+                    switch (c.Dir)
+                    {
+                        case Direction.Up:
+                            x = (pt.x - minX) * GridSizeOfEachTile + (GridSizeOfEachTile / 2);
+                            y = (pt.y - minY) * GridSizeOfEachTile + GridSizeOfEachTile - 1;
+                            break;
+                        case Direction.Down:
+                            x = (pt.x - minX) * GridSizeOfEachTile + (GridSizeOfEachTile / 2);
+                            y = (pt.y - minY) * GridSizeOfEachTile;
+                            break;
+
+                        case Direction.Left:
+                            x = (pt.x - minX) * GridSizeOfEachTile;
+                            y = (pt.y - minY) * GridSizeOfEachTile + (GridSizeOfEachTile / 2);
+                            break;
+                        case Direction.Right:
+                            x = (pt.x - minX) * GridSizeOfEachTile + GridSizeOfEachTile - 1;
+                            y = (pt.y - minY) * GridSizeOfEachTile + (GridSizeOfEachTile / 2);
+                            break;
+                    }
+                    aspStartPoints.Add(new Vector2(x, y));
+                }
+            }
+        }
+        //Debug.Log("Creating floors for room " + r.Id);
+        IEnumerator<Vector2> pointEnumer = r.Space.GetEnumerator();
+        pointEnumer.MoveNext();
+        //Debug.Log("Room " + r.Id + "contains a point " + pointEnumer.Current);
+        //Debug.Log("room " + r.Id + " has " + r.Space.Count + " rooms");
+        //Debug.Log("TIles");
+        foreach (Vector2 v in aspTiles)
+        {
+            //Debug.Log(v);
+        }
+        //Debug.Log("start points");
+        foreach (Vector2 v in aspStartPoints)
+        {
+            //Debug.Log(v);
+        }
+        GeneratedPath p = PathGeneration.RunPathGeneration(aspTiles, aspStartPoints, NumModels, GridSizeOfEachTile, aspTiles.Count*(2*GridSizeOfEachTile-1), Random.Range(0, 2));
+        List<Vector2> points = p.Spaces;
+        HashSet<Vector2> rampPoints = new HashSet<Vector2>(p.Ramps);
+        
+        //Debug.Log("Now laying tiles...");
+        //Debug.Log("BaseX: " + baseX);
+        //Debug.Log("BaseZ: " + baseZ);
+        //Debug.Log("MinY: " + minY);
+        //Debug.Log("MinX: " + minX);
+        //Debug.Log("Size: " + size);
+
+        foreach (Vector2 v in points)
+        {
+            if (!rampPoints.Contains(v))
+            {
+                float basePositionX = minX * size + baseX * size;
+                float basePositionY = minY * size + baseZ * size;
+                // magic numbers are BAD GABE WHY YOU DO THIS
+                // currently they're magic for GridSize=4
+                // They're magic because I don't actually know what their values are supposed to be.
+                float offsetX = v.x * 2.5f - 5 * (1 - 1 / (float)GridSizeOfEachTile);
+                float offsetY = v.y * 2.5f - 5 * (1 - 1 / (float)GridSizeOfEachTile);
+                Vector3 pos = new Vector3(basePositionX + offsetX, 0, basePositionY + offsetY);
+
+                Instantiate(FloorTilePiece, pos, Quaternion.identity);
+            }
+            
+        }
+        if(p.Ramps.Count > 0)
+        {
+            for(int i = 0; i < p.Ramps.Count; i += 3)
+            {
+                Vector2 avg = AveragePoint(p.Ramps, i, i+3);
+
+                float basePositionX = minX * size + baseX * size;
+                float basePositionY = minY * size + baseZ * size;
+                // magic numbers are BAD GABE WHY YOU DO THIS
+                // currently they're magic for GridSize=4
+                // They're magic because I don't actually know what their values are supposed to be.
+                float offsetX = avg.x * 2.5f - 5 * (1 - 1 / (float)GridSizeOfEachTile);
+                float offsetY = avg.y * 2.5f - 5 * (1 - 1 / (float)GridSizeOfEachTile);
+                Vector3 pos = new Vector3(basePositionX + offsetX, 0, basePositionY + offsetY);
+                Instantiate(Ramp, pos, DirectionOfPoints(p.Ramps, i));
+            }
+            
+        }
+
+
+        //foreach (Vector2 point in r.Space)
+        //{
+        //    float x = point.x * size + baseX * size;
+        //    float y = 0;
+        //    float z = point.y * size + baseZ * size;
+        //    floors.Add(Instantiate(floor, new Vector3(x, y, z), Quaternion.identity));
+        //}
+    }
+    // Computes average point of a list from i to j.
+    private Vector2 AveragePoint(List<Vector2> points, int i, int j)
+    {
+        Vector2 sum = Vector2.zero;
+        for(int it = i; it < j; it++)
+        {
+            sum += points[it];
+        }
+        return sum / (j - i);
+    }
+    // returns the direction of a set of points. They should all be in a line along
+    // the x or y axis. There should be at least 2 and they are used to assume the rest.
+    private Quaternion DirectionOfPoints(List<Vector2> points, int i)
+    {
+        if(points[i].y != points[i+1].y)
+        {
+            return Quaternion.AngleAxis(90, new Vector3(0, 1, 0));
+        }
+        return Quaternion.identity;
+    }
+
+    // Selects a point in the GridSizeOfEachTilexGridSizeOfEachTile set of points in 
+    // room r1 that is adjacent to r2.
+    // Float minx and miny are for computing the normalized index of a space tile in r1 once an adjacent pair is found.
+    private List<Vector2> ConnectingPoints(Room r1, Room r2, float minX, float minY)
+    {
+        List<Vector2> points = new List<Vector2>();
+        foreach (Vector2 pt1 in r1.Space)
+        {
+            foreach (Vector2 pt2 in r2.Space)
+            {
+                if(Mathf.Abs(pt1.x-pt2.x) + Mathf.Abs(pt1.y - pt2.y) == 1)
+                {
+                    float x = 0;
+                    float y = 0;
+                    if(pt1.x == pt2.x)
+                    {
+                        x = (pt1.x - minX) * GridSizeOfEachTile + (GridSizeOfEachTile / 2);
+                        if (pt1.y > pt2.y)
+                        {
+                            y = (pt1.y - minY) * GridSizeOfEachTile;
+                        }
+                        else // pt1.y < pt2.y
+                        {
+                            y = (pt1.y - minY) * GridSizeOfEachTile + GridSizeOfEachTile - 1;
+                        }
+
+                    }
+                    if (pt1.y == pt2.y)
+                    {
+                        y = (pt1.y - minY) * GridSizeOfEachTile + (GridSizeOfEachTile / 2);
+                        if (pt1.x > pt2.x)
+                        {
+                            x = (pt1.x - minX) * GridSizeOfEachTile;
+                           
+                        }
+                        else // pt1.y < pt2.y
+                        {
+                            x = (pt1.x - minX) * GridSizeOfEachTile + GridSizeOfEachTile - 1;
+                        }
+
+                    }
+                    points.Add(new Vector2(x, y));
+                }
+            }
+        }
+        return points;
     }
 
     // Creates a door prefab in the space between two rooms, r1 and r2.

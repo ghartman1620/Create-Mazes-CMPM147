@@ -15,20 +15,20 @@ public abstract class MissionTerminal : MonoBehaviour
     // this is constructing - so it might include things like which key corresponds
     // to this door.
     public abstract void Build(Vertex v);
-        //Debug.Log("MissionTerminal build on vertex " + v.Name);
-        //Debug.Log("Base position - x: " + v.BasePosition.x + ", y: " + v.BasePosition.y);
-        //Debug.Log("Size - " + v.Size);
-        //Debug.Log("Tags - ");
+        ////Debug.Log("MissionTerminal build on vertex " + v.Name);
+        ////Debug.Log("Base position - x: " + v.BasePosition.x + ", y: " + v.BasePosition.y);
+        ////Debug.Log("Size - " + v.Size);
+        ////Debug.Log("Tags - ");
         //foreach(String s in v.Tags)
         //{
-        //    Debug.Log(s);
+        //    //Debug.Log(s);
         //}
-        //Debug.Log("end tags");
-        //Debug.Log("connections");
+        ////Debug.Log("end tags");
+        ////Debug.Log("connections");
         //foreach (Connection c in v.Connections)
         //{
-        //    Debug.Log(c.Dir);
-        //    Debug.Log(" Position - x: " + c.Point.x + ", y: " + c.Point.y);
+        //    //Debug.Log(c.Dir);
+        //    //Debug.Log(" Position - x: " + c.Point.x + ", y: " + c.Point.y);
         //}
-        //Debug.Log("end connections");
+        ////Debug.Log("end connections");
 }

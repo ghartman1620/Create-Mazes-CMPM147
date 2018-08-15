@@ -111,8 +111,8 @@ public class CreateRooms : MonoBehaviour {
                 end = rooms[rooms.GetLength(0) - 1, Random.Range(0, rooms.GetLength(1))];
             } while (begin.Equals(end));
 
-            ////Debug.Log("Begin is " + begin.Id);
-            ////Debug.Log("End is " + end.Id);
+            //////Debug.Log("Begin is " + begin.Id);
+            //////Debug.Log("End is " + end.Id);
 
             foreach(Room r in uniqueRoomsArray)
             {
@@ -125,11 +125,11 @@ public class CreateRooms : MonoBehaviour {
             //DrawRooms(rooms, 0, 0, 10, Floor, Door);
 
 
-            ////Debug.Log("End to begin path is: ");
+            //////Debug.Log("End to begin path is: ");
             HashSet<Room> path = new HashSet<Room>();
             for(Room r = end; r != begin; r = r.Parent)
             {
-                ////Debug.Log(r.Id);
+                //////Debug.Log(r.Id);
                 Assert.IsNotNull(r.Parent);
                 path.Add(r);
             }
@@ -142,7 +142,7 @@ public class CreateRooms : MonoBehaviour {
             //{
             //    path.Add(rooms[Random.Range(0, rooms.GetLength(0)), Random.Range(0, rooms.GetLength(1))]);
             //}
-            //Debug.Log(begin.Id);
+            ////Debug.Log(begin.Id);
 
 
             //@TODO: Replace these random selections from sets with
@@ -405,8 +405,8 @@ public class CreateRooms : MonoBehaviour {
                 {
                     s += room.Id + ", ";
                 }
-                Debug.Log(i + ", " + j + ", id " + r[i, j].Id + " is adjacent to " + s);
-                Debug.Log(i + ", " + j + ", id " + r[i, j].Id + " has parent " + (r[i, j].Parent == null ? "null" : r[i, j].Parent.Id.ToString()) + " and distance " + r[i, j].Distance);
+                //Debug.Log(i + ", " + j + ", id " + r[i, j].Id + " is adjacent to " + s);
+                //Debug.Log(i + ", " + j + ", id " + r[i, j].Id + " has parent " + (r[i, j].Parent == null ? "null" : r[i, j].Parent.Id.ToString()) + " and distance " + r[i, j].Distance);
             }
         }
     }

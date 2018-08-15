@@ -12,9 +12,7 @@ public class KeyRoom : MissionTerminal {
     {
         Instantiate(Floor, new Vector3(TileSize*v.BasePosition.x, 0, TileSize*v.BasePosition.y), Quaternion.identity);
         GameObject g = Instantiate(Key, new Vector3(TileSize * v.BasePosition.x, 1, TileSize * v.BasePosition.y), Quaternion.identity).gameObject;
-
-        // The fuck?
-        // from https://docs.unity3d.com/ScriptReference/Material.SetColor.html
+       
         g.GetComponent<Renderer>().material.color = v.Color;
         g.GetComponent<KeyLock>().LockId = v.LockId;
     }

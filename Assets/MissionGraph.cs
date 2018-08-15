@@ -48,7 +48,12 @@ public class Vertex
     public HashSet<Vertex> ForwardAdj;
     public HashSet<Vertex> BackAdj;
     public int Size;
-    public UnityEngine.Vector2 BasePosition;
+
+    // Base position is for drawing, while coordinate describes
+    // the nxn space allocated for each Vertex. These nxn spaces we don't care about their size
+    // when dealing with coorindate, so coordinate is just 0, 0 or 1, 0, etc.
+    public UnityEngine.Vector2 BasePosition; 
+    public UnityEngine.Vector2 Coordinate; 
     public bool Visited;
     public HashSet<Connection> Connections;
 

@@ -15,7 +15,7 @@ public class ExitRoom : MissionTerminal {
     }
     // Use this for initialization
     void Start () {
-        //Debug.Log("exit start");
+        ////Debug.Log("exit start");
 	}
 	
 	// Update is called once per frame
