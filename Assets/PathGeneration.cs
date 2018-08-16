@@ -24,7 +24,7 @@ class UnsatisfiableException: System.Exception
 
 class PathGeneration
 {
-    public static GeneratedPath RunPathGeneration(List<Vector2> tiles, List<Vector2> startPoints, int modelCount, int tileSize, int max, int numRamps)
+    public static GeneratedPath RunPathGeneration(List<Vector2> tiles, List<Vector2> startPoints, int modelCount, float tileSize, int max, int numRamps)
     {
         string exec = "../clingo-5.3.0-win64/clingo.exe";
         string[] inputs = { "Assets/path.lp", "Assets/ramps.lp" };

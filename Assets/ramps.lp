@@ -18,3 +18,4 @@ twoapart((Point1x, Point1y), (Point2x, Point2y)) :-
   |Point1y-Point2y| == 2.  
   
 :- ramp(X,Y,Z), startpoint(Y).
+:- {adj(A, Y): ramp(X,Y,Z)} > 2.

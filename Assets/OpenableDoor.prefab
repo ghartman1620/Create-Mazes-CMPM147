@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 23936394407984208}
   - component: {fileID: 65238418064687674}
   - component: {fileID: 114626040222266632}
+  - component: {fileID: 65039982157555198}
   m_Layer: 0
   m_Name: OpenableDoor
   m_TagString: Openable Door
@@ -85,7 +86,7 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1948473484410010}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!65 &65238418064687674
+--- !u!65 &65039982157555198
 BoxCollider:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -93,6 +94,18 @@ BoxCollider:
   m_GameObject: {fileID: 1948473484410010}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &65238418064687674
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1948473484410010}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 4.7664175}

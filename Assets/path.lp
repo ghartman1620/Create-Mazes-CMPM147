@@ -6,7 +6,7 @@
 
 point((X*n..X*n+n-1, Y*n..Y*n+n-1)) :- tile((X, Y)). 
 space((X, Y)) :- startpoint((X, Y)).
-count(0..max).
+
 
 adj((Point1x, Point1y), (Point2x, Point2y)) :-
   space((Point1x, Point1y)),

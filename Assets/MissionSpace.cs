@@ -16,8 +16,17 @@ public class MissionSpace : MonoBehaviour {
     public int AttemptsBeforeTimeout;
 
     private MissionGraph g;
+    private List<Vertex> spaceList;
 	// Use this for initialization
 	void Start () {
+        if(SpaceBudget <= 2)
+        {
+            throw new System.ArgumentException("Space Budget must be at least 3.");
+        }
+        if(ObstacleBudget < 0)
+        {
+            throw new System.ArgumentException("ObstacleBudget must be positive.");
+        }
         g = new MissionGraph(ObstacleBudget, SpaceBudget);
         g.CompleteProduction();
         
@@ -100,15 +109,17 @@ public class MissionSpace : MonoBehaviour {
             throw new System.Exception("Error! World not successfully generated after " + attempts + " attempts, exiting.");
         }
         //Debug.Log("Success after " + attempts + " attempts to generate");
+
         foreach (Vertex v in g)
         {
+           
             MissionTerminal t = Instantiate(terminalType(v.Name), new Vector3(0, 0, 0), Quaternion.identity);
 
             t.Build(v);
         }
         ResetPlayerPosition();
-        
     }
+    
     public void AssignVerticesSpace()
     {
         // Pick a vertex. Give it spot (0, 0). If it's a space, give it some size.

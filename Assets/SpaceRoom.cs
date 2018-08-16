@@ -12,7 +12,9 @@ public class SpaceRoom : MissionTerminal {
     // There should be GridSizeOfEachTile*GridSizeOfEachTile of these in the same space as one Floor.
     public GameObject FloorTilePiece;
     public float MaxWeight;
-    public int TileWidth;
+    public float TileWidth;
+    public float GridSizeOfEachTile;
+    public int NumModels;
 
     private Room[,] rooms;
     private List<GameObject> doors;
@@ -20,10 +22,15 @@ public class SpaceRoom : MissionTerminal {
     private List<GameObject> floors;
     private int Size;
     private int Connections;
+    // how many rooms should we connect based on the size this spaceroom grid?
+    // Bigger number = smaller rooms, smaller number = bigger rooms.
     private readonly double ConnectionsDivisor = 2.5;
+    // How many rooms should we add in addition to those on the main path?
+    // size*size /ExtraRoomsDivisor of them 
+    // bigger number = fewer extra rooms, smaller numbe r= more rooms
     private readonly double ExtraRoomsDivisor = 5;
-    private readonly int GridSizeOfEachTile = 4;
-    private readonly int NumModels = 1;
+    
+    
     // This really ought to be passed around, but I'm running out of time.
     private HashSet<Connection> connections;
 
@@ -510,10 +517,10 @@ public class SpaceRoom : MissionTerminal {
         {
             //Debug.Log(v);
         }
-        GeneratedPath p = PathGeneration.RunPathGeneration(aspTiles, aspStartPoints, NumModels, GridSizeOfEachTile, aspTiles.Count*(2*GridSizeOfEachTile-1), Random.Range(0, 2));
+        GeneratedPath p = PathGeneration.RunPathGeneration(aspTiles, aspStartPoints, NumModels, GridSizeOfEachTile, aspTiles.Count * (2 * (int)GridSizeOfEachTile - 1), Random.Range(0, 2));
         List<Vector2> points = p.Spaces;
         HashSet<Vector2> rampPoints = new HashSet<Vector2>(p.Ramps);
-        
+
         //Debug.Log("Now laying tiles...");
         //Debug.Log("BaseX: " + baseX);
         //Debug.Log("BaseZ: " + baseZ);
@@ -521,40 +528,45 @@ public class SpaceRoom : MissionTerminal {
         //Debug.Log("MinX: " + minX);
         //Debug.Log("Size: " + size);
 
+        float scale = 1 / GridSizeOfEachTile;
+        Debug.Log(scale);
+        //Center to edge of a tile
+        float offset = TileWidth / 2;
+        float indexMultiple = 10 / GridSizeOfEachTile;
         foreach (Vector2 v in points)
         {
             if (!rampPoints.Contains(v))
             {
                 float basePositionX = minX * size + baseX * size;
                 float basePositionY = minY * size + baseZ * size;
-                // magic numbers are BAD GABE WHY YOU DO THIS
-                // currently they're magic for GridSize=4
-                // They're magic because I don't actually know what their values are supposed to be.
-                float offsetX = v.x * 2.5f - 5 * (1 - 1 / (float)GridSizeOfEachTile);
-                float offsetY = v.y * 2.5f - 5 * (1 - 1 / (float)GridSizeOfEachTile);
+                // Now with 100% fewer magic numbers!
+                float offsetX = v.x * indexMultiple - offset * (1 - 1 / (float)GridSizeOfEachTile);
+                float offsetY = v.y * indexMultiple - offset * (1 - 1 / (float)GridSizeOfEachTile);
                 Vector3 pos = new Vector3(basePositionX + offsetX, 0, basePositionY + offsetY);
 
-                Instantiate(FloorTilePiece, pos, Quaternion.identity);
+                GameObject g = Instantiate(FloorTilePiece, pos, Quaternion.identity);
+                g.transform.localScale = new Vector3(g.transform.localScale.x * scale, 1, g.transform.localScale.z * scale);
             }
-            
+
         }
-        if(p.Ramps.Count > 0)
+        if (p.Ramps.Count > 0)
         {
-            for(int i = 0; i < p.Ramps.Count; i += 3)
+            for (int i = 0; i < p.Ramps.Count; i += 3)
             {
-                Vector2 avg = AveragePoint(p.Ramps, i, i+3);
+                Vector2 avg = AveragePoint(p.Ramps, i, i + 3);
 
                 float basePositionX = minX * size + baseX * size;
                 float basePositionY = minY * size + baseZ * size;
                 // magic numbers are BAD GABE WHY YOU DO THIS
                 // currently they're magic for GridSize=4
                 // They're magic because I don't actually know what their values are supposed to be.
-                float offsetX = avg.x * 2.5f - 5 * (1 - 1 / (float)GridSizeOfEachTile);
-                float offsetY = avg.y * 2.5f - 5 * (1 - 1 / (float)GridSizeOfEachTile);
+                float offsetX = avg.x * indexMultiple - offset * (1 - 1 / (float)GridSizeOfEachTile);
+                float offsetY = avg.y * indexMultiple - offset * (1 - 1 / (float)GridSizeOfEachTile);
                 Vector3 pos = new Vector3(basePositionX + offsetX, 0, basePositionY + offsetY);
-                Instantiate(Ramp, pos, DirectionOfPoints(p.Ramps, i));
+                GameObject g = Instantiate(Ramp, pos, DirectionOfPoints(p.Ramps, i));
+                g.transform.localScale = new Vector3(g.transform.localScale.x * scale, 1, g.transform.localScale.x * scale);
             }
-            
+
         }
 
 
